@@ -1,0 +1,5 @@
+numpy<2
+onnxruntime>=1.17
+soundfile>=0.12
+torch>=2.1
+loguru>=0.5
