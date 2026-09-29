@@ -164,7 +164,8 @@ Output produced by the fine-tuned DeepFilterNet3 model.
 
 And immediately below that, add:
 
-```markdown
+```
+
 ## 📈 Visual Results
 
 ![Speech Enhancement Results](results.png)
