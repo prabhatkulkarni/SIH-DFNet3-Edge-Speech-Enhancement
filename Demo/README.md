@@ -120,6 +120,54 @@ The demonstration will include:
 The visual comparison allows the input and enhanced signals to be inspected alongside the quantitative measurements.
 
 ---
+## 🎧 Listen to the Demonstration
+
+### 1. Clean Speech — Reference
+
+[▶️ Download / Listen to Clean Speech](clean.wav)
+
+Reference speech before noise mixing.
+
+---
+
+### 2. Noisy Speech — Approximately 0 dB SNR
+
+[▶️ Download / Listen to Noisy Speech](noisy_0dB.wav)
+
+Hindi speech mixed with DEMAND environmental noise at approximately 0 dB SNR.
+
+---
+
+### 3. Enhanced Speech — Fine-tuned DeepFilterNet3
+
+[▶️ Download / Listen to Enhanced Speech](enhanced_finetuned.wav)
+
+Output produced by the fine-tuned DeepFilterNet3 model.
+
+---
+
+### 🔄 Demonstration Flow
+
+```text
+🎤 Clean Speech
+       +
+🌧️ DEMAND Noise
+       ↓
+   ≈ 0 dB SNR
+       ↓
+┌─────────────────────┐
+│ Fine-tuned          │
+│ DeepFilterNet3      │
+└──────────┬──────────┘
+           ↓
+    Enhanced Speech
+
+And immediately below that, add:
+
+```markdown
+## 📈 Visual Results
+
+![Speech Enhancement Results](results.png)
 
 ## 🧠 Model
 
