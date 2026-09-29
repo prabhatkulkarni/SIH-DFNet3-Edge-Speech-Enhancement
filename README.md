@@ -1,265 +1,286 @@
-# SIH-DFNet3 Edge Speech Enhancement
+# 🎙️ SIH-DFNet3 — Edge Speech Enhancement
 
-> **Fine-tuned DeepFilterNet3 for multilingual speech enhancement with ONNX-based edge deployment targeting Raspberry Pi 5.**
+### Fine-tuned DeepFilterNet3 for Hindi Speech Enhancement with ONNX-based Edge Deployment Targeting Raspberry Pi 5
+
+A speech enhancement system designed to reduce background noise from human speech while preserving speech quality.
+
+The current model has been fine-tuned for **Hindi speech** and validated through controlled experiments and ONNX Runtime.
+
+The project is designed to be extended toward **multilingual speech enhancement** using the prepared English and Hindi speech datasets together with diverse real-world noise datasets.
 
 ---
 
 ## 🚀 Project Overview
 
-This project develops an AI-based speech enhancement system designed to suppress diverse environmental, mechanical, and impulsive noise while preserving speech intelligibility.
+Background noise can make speech difficult to understand in environments such as:
 
-The system is based on **DeepFilterNet3**, fine-tuned using multilingual speech and a diverse noise corpus. The trained model has subsequently been exported into **ONNX components** and validated using **ONNX Runtime**.
+- Vehicles
+- Outdoor locations
+- Crowded environments
+- Electronic environments
+- Industrial environments
+- Drone environments
+- Emergency situations
+- Low-SNR communication
 
-The final deployment target is a **Raspberry Pi 5**, where the system is intended to perform edge-based speech enhancement.
+This project uses **DeepFilterNet3**, a neural speech enhancement architecture, and adapts it using our speech and noise datasets.
 
-### Target Application
+The trained model is then exported into **ONNX components** for future edge deployment.
+
+### Current pipeline
 
 ```text
-🎤 Microphone
-      │
-      ▼
- Noisy Speech
-      │
-      ▼
- DeepFilterNet3
-      │
-      ▼
- ONNX Runtime
-      │
-      ▼
- Enhanced Speech
-      │
-      ▼
- 🔊 Speaker
+Speech
+  +
+Background Noise
+       │
+       ▼
+  Noisy Speech
+       │
+       ▼
+Fine-tuned DeepFilterNet3
+       │
+       ▼
+Enhanced Speech
+       │
+       ▼
+     ONNX
+       │
+       ▼
+Future Edge Deployment
+       │
+       ▼
+ Raspberry Pi 5
 ```
 
 ---
 
-# 🧠 System Architecture
+# 🎯 Current Goal
+
+The current experimentally validated model focuses on:
+
+> **Hindi speech enhancement under different noise conditions.**
+
+The model has been:
+
+- Fine-tuned using Hindi speech data
+- Evaluated using multiple noise conditions
+- Tested using controlled noisy speech
+- Exported to ONNX
+- Numerically validated against PyTorch
+- Integrated into an ONNX-backed inference pipeline
+
+---
+
+# 🌐 Multilingual Expansion
+
+Although the current trained model is Hindi-focused, the project has been designed with a broader multilingual goal.
+
+The prepared datasets include:
 
 ```text
-                         TRAINING
-                            │
-          ┌─────────────────┼─────────────────┐
-          │                 │                 │
-          ▼                 ▼                 ▼
-      English            Hindi          Noise Corpus
-       Speech            Speech         ┌─────────────┐
-                                        │ DEMAND      │
-                                        │ Drone       │
-                                        │ ESC-50      │
-                                        │ Firearms    │
-                                        │ MS-SNSD     │
-                                        └──────┬──────┘
-                                               │
-                                               ▼
-                                        Noisy Speech
-                                               │
-                                               ▼
-                                  Fine-tuned DeepFilterNet3
-                                               │
-                                               ▼
-                                           Epoch 120
-                                               │
-                                               ▼
-                                         ONNX Export
-                                               │
-                         ┌─────────────────────┼─────────────────────┐
-                         │                     │                     │
-                         ▼                     ▼                     ▼
-                     enc.onnx             erb_dec.onnx          df_dec.onnx
-                         │                     │                     │
-                         └─────────────────────┼─────────────────────┘
-                                               │
-                                               ▼
-                                         ONNX Runtime
-                                               │
-                                               ▼
-                                      Edge Deployment
-                                               │
-                                               ▼
-                                        Raspberry Pi 5
-                                               │
-                                               ▼
-                                      🎤 → DFNet3 → 🔊
+English Speech
+       +
+Hindi Speech
+       +
+Multiple Noise Sources
+       ↓
+Multilingual Speech Enhancement
 ```
 
+The available speech and noise datasets allow the project to be extended beyond Hindi.
+
+### Planned multilingual pipeline
+
+```text
+English Speech ─────┐
+                    │
+Hindi Speech ───────┤
+                    │
+Future Languages ───┤
+                    ▼
+             Multilingual Training
+                    │
+                    ▼
+              DeepFilterNet3
+                    │
+                    ▼
+                 ONNX
+                    │
+                    ▼
+              Raspberry Pi 5
+```
+
+The goal is to improve robustness across:
+
+- Languages
+- Accents
+- Speakers
+- Recording conditions
+- Noise environments
+- Signal-to-noise ratios
+
+> **Current status:** The Hindi model is the experimentally validated model. Multilingual training is a planned expansion using the prepared datasets.
+
 ---
 
-# 🎯 Objectives
+# 📊 Dataset Strategy
 
-The project aims to:
+The project combines clean speech datasets with diverse noise datasets.
 
-- Enhance speech in noisy environments.
-- Support both **English and Hindi speech**.
-- Train using diverse environmental and mechanical noise.
-- Preserve speech intelligibility while suppressing unwanted noise.
-- Convert the trained neural network into an **ONNX-based edge inference pipeline**.
-- Prepare the system for deployment on resource-constrained edge hardware.
-- Evaluate the feasibility of real-time speech enhancement on a **Raspberry Pi 5**.
-
----
-
-# 📚 Dataset
-
-The training pipeline uses multilingual speech together with diverse environmental, mechanical, and impulsive noise sources.
-
-## Speech Sources
+## Speech
 
 ### English
 
-English speech with various accents was used as the primary English speech corpus.
+```text
+~88,000 speech recordings
+~110 speakers
+16 kHz source audio
+Speaker-disjoint train/validation/test split
+```
 
 ### Hindi
 
-A Hindi speech dataset was used for multilingual speech enhancement.
+```text
+600 original recordings
+~100 speakers
+Training + testing data
+Original dataset contains heterogeneous audio formats
+```
 
-## Noise Sources
+The Hindi dataset was cleaned and converted into a consistent format before training.
 
-The project combines multiple noise sources to expose the model to different acoustic conditions:
+---
 
-- **DEMAND** — environmental/background noise
-- **Drone Noise Dataset** — drone and related noise
-- **ESC-50** — selected environmental and mechanical sounds
-- **Firearms Audio Dataset** — firearm noise
-- **MS-SNSD** — complex noise
+# 🔊 Noise Sources
 
-Representative noise types include:
+The project uses multiple noise sources to expose the model to different real-world conditions.
 
-| Noise type | Example source |
-|---|---|
-| 🔫 Firearm | Firearms dataset |
-| 🚁 Drone | Drone dataset |
-| 🚗 Vehicle / engine | ESC-50 |
-| 🚨 Siren | ESC-50 |
-| ✈️ Airplane | ESC-50 |
-| 🌬️ Wind | ESC-50 |
-| 🌧️ Rain | ESC-50 |
-| ⛈️ Thunderstorm | ESC-50 |
-| 🧹 Vacuum cleaner | ESC-50 |
-| ⌨️ Keyboard typing | ESC-50 |
-| 🧺 Washing machine | ESC-50 |
+```text
+DEMAND
+   │
+   ├── Environmental noise
+   │
+Drone Noise
+   │
+   ├── Drone + background noise
+   │
+ESC-50
+   │
+   ├── Vehicle
+   ├── Engine
+   ├── Wind
+   ├── Rain
+   ├── Siren
+   └── Electronic / household sounds
+   │
+Firearms
+   │
+   └── Firearm acoustic events
+   │
+MS-SNSD
+   │
+   └── Complex synthetic / real-world noise
+```
 
-The model is trained as a **general speech-enhancement system**, rather than as separate noise-specific classifiers.
+This provides a diverse noise environment for speech enhancement experiments.
 
 ---
 
 # 🧠 Model
 
-## Base Model
+The project uses:
 
 **DeepFilterNet3**
 
-DeepFilterNet3 is a neural speech-enhancement architecture combining spectral processing with a learned deep-filtering stage.
+DeepFilterNet3 performs speech enhancement using:
 
-## Fine-Tuning
+- Spectral features
+- ERB-band features
+- Neural masking
+- Deep filtering
+- Time-frequency processing
 
-The model was fine-tuned using the project's multilingual speech and diverse noise corpus.
-
-### Final checkpoint
-
-```text
-Model:          DeepFilterNet3
-Final Epoch:    120
-Sample Rate:    48 kHz
-FFT Size:       960
-Hop Size:       480
-```
-
-The final trained checkpoint was:
+The model operates at:
 
 ```text
-model_120.ckpt.best
+Sample Rate : 48 kHz
+FFT Size    : 960
+Hop Size    : 480
+ERB Bands   : 32
+DF Bins     : 96
+DF Order    : 5
 ```
 
 ---
 
-# 🔬 Training Pipeline
+# 🏋️ Training
+
+The model was fine-tuned from the official pretrained DeepFilterNet3 model.
+
+### Training configuration
 
 ```text
-Clean Speech
-     │
-     ├───────────────┐
-     │               │
-     │           Noise Sample
-     │               │
-     └───────┬───────┘
-             ▼
-        Noise Mixing
-             │
-             ▼
-        Noisy Speech
-             │
-             ▼
-      DeepFilterNet3
-             │
-             ▼
-      Enhanced Speech
-             │
-             ▼
-          Losses
-             │
-             ▼
-       Model Update
+Model          : DeepFilterNet3
+Initialization : Official pretrained model
+Final Epoch    : 120
+Optimizer      : AdamW
+Learning Rate  : 5e-4
+Batch Size     : 16
 ```
 
-The training pipeline exposes the model to different speech/noise combinations and SNR conditions.
+Training was performed using **GPU-enabled Google Colab**.
+
+The training and evaluation pipeline was designed to keep speech and noise data separated across the appropriate splits.
 
 ---
 
-# 📈 Quantitative Validation
+# 📈 Evaluation
 
-## Controlled 0-dB Evaluation
-
-A controlled Hindi speech + DEMAND noise sample was created at approximately **0 dB input SNR**.
+A controlled Hindi speech sample was mixed with DEMAND environmental noise at approximately:
 
 ```text
-Clean Speech
-     +
-DEMAND Noise
-     │
-     ▼
-  ~0 dB SNR
-     │
-     ▼
-Fine-tuned DeepFilterNet3
-     │
-     ▼
-Enhanced Speech
+Input SNR ≈ 0 dB
 ```
 
-### Result
+The fine-tuned model produced:
 
-| Metric | Result |
+```text
+Output SNR ≈ 20.4086 dB
+```
+
+### Controlled sample
+
+| Measurement | Result |
 |---|---:|
 | Input SNR | ≈ 0 dB |
 | Output SNR | **20.4086 dB** |
 | SNR Improvement | **≈ +20.4086 dB** |
 
-> **Evaluation note:** The 20.4086 dB result is from one controlled evaluation sample. It should not be interpreted as the overall test-set average performance of the model.
+> **Important:** This 20.4086 dB result is from one controlled evaluation sample. It is not the overall test-set average.
 
 ---
 
-# 📊 Test-Set Evaluation
+# 🧪 Test-Set Evaluation
 
-The final model was also evaluated using the project's test configuration.
+The final model was also evaluated using the project test configuration.
 
-At the **0-dB evaluation condition**:
+For the approximately 0 dB test condition:
 
-| Metric | Result |
-|---|---:|
-| SDR | **+2.9187 dB** |
-| STOI | **0.6925** |
+```text
+SDR : 2.91873 dB
+STOI: 0.69247
+```
 
-These metrics represent a different evaluation setup from the controlled-sample SNR measurement above.
+The test-set evaluation and the controlled-sample SNR experiment are different measurements and should not be directly treated as the same metric.
 
 ---
 
-# ⚙️ ONNX Edge Deployment
+# 🔄 PyTorch → ONNX
 
-The fine-tuned DeepFilterNet3 model was exported into ONNX neural-network components.
+For edge deployment, the learned DeepFilterNet3 components were exported to ONNX.
 
-The resulting deployment components are:
+The exported components are:
 
 ```text
 enc.onnx
@@ -267,434 +288,553 @@ erb_dec.onnx
 df_dec.onnx
 ```
 
-These components are used as part of the neural-network inference pipeline while the surrounding DeepFilterNet signal-processing stages remain part of the overall enhancement system.
+The ONNX model package also contains:
 
-## 📦 ONNX Model Size
+```text
+config.ini
+version.txt
+```
 
-| Component | Approx. Size |
-|---|---:|
-| `enc.onnx` | 1.86 MB |
-| `erb_dec.onnx` | 3.14 MB |
-| `df_dec.onnx` | 3.19 MB |
-| **Total** | **≈ 8.19 MB** |
+### Model structure
+
+```text
+Input Features
+      │
+      ▼
+┌──────────────┐
+│   enc.onnx   │
+└──────┬───────┘
+       │
+       ▼
+┌────────────────┐
+│  erb_dec.onnx  │
+└──────┬─────────┘
+       │
+       ▼
+ DeepFilter Processing
+       │
+       ▼
+┌──────────────┐
+│  df_dec.onnx │
+└──────┬───────┘
+       │
+       ▼
+ Enhanced Spectrum
+       │
+       ▼
+ Audio Synthesis
+```
 
 ---
 
 # ✅ ONNX Validation
 
-The exported ONNX components were tested using **ONNX Runtime** and compared against the original PyTorch implementation.
+Each ONNX component was compared against its PyTorch reference output.
 
-```text
-                         PyTorch
-                            │
-                            ▼
-                       Fine-tuned
-                       DeepFilterNet3
-                            │
-                            ▼
-                       ONNX Export
-                            │
-              ┌─────────────┼─────────────┐
-              ▼             ▼             ▼
-           enc.onnx     erb_dec.onnx   df_dec.onnx
-              │             │             │
-              └─────────────┼─────────────┘
-                            ▼
-                     ONNX Runtime
-                            │
-                            ▼
-                     Enhanced Audio
-```
+| Component | Validation |
+|---|:---:|
+| `enc.onnx` | ✅ PASS |
+| `erb_dec.onnx` | ✅ PASS |
+| `df_dec.onnx` | ✅ PASS |
 
-### Validation Result
+Example numerical errors:
 
-On the controlled evaluation sample:
+| Component | MAE | RMSE |
+|---|---:|---:|
+| `enc.onnx` | `2.827e-08`* | `7.447e-08`* |
+| `erb_dec.onnx` | `8.142e-08` | `1.290e-07` |
+| `df_dec.onnx` | `2.469e-09` | `5.399e-09` |
 
-```text
-PyTorch output SNR : 20.408592 dB
-ONNX output SNR    : 20.408594 dB
-```
+\* Representative encoder output comparison.
 
-Approximate difference:
+---
+
+# 🔬 End-to-End ONNX Validation
+
+The exported ONNX components were integrated into the DeepFilterNet processing pipeline using **ONNX Runtime**.
+
+The same controlled input was processed using both implementations.
+
+| Implementation | Output SNR |
+|---|---:|
+| PyTorch | `20.408592 dB` |
+| ONNX Runtime | `20.408594 dB` |
+
+Difference:
 
 ```text
 ≈ 0.000002 dB
 ```
 
-This demonstrates that the exported ONNX-backed neural components reproduce the PyTorch result extremely closely for the controlled evaluation pipeline.
+This demonstrates that the exported ONNX neural-network components reproduce the PyTorch result extremely closely for the controlled evaluation pipeline.
 
 ---
 
-# 🧪 ONNX Component Validation
+# 💻 Development & Deployment Environment
 
-The individual exported components were also numerically compared against reference outputs.
+Different stages of the project use different environments.
 
-### `enc.onnx`
+| Environment | Purpose |
+|---|---|
+| **Google Colab + GPU** | Training, evaluation and ONNX export |
+| **GitHub** | Code, ONNX model files, results and documentation |
+| **Local / Codespaces** | Repository development and lightweight testing |
+| **Raspberry Pi 5** | Intended edge deployment and hardware benchmarking |
 
-```text
-MAE / RMSE / MAX error
-within approximately 10⁻⁶ scale
-```
-
-### `erb_dec.onnx`
-
-```text
-MAE / RMSE / MAX error
-within approximately 10⁻⁶ scale
-```
-
-### `df_dec.onnx`
+### Development flow
 
 ```text
-MAE / RMSE / MAX error
-within approximately 10⁻⁷ scale
+Datasets
+   │
+   ▼
+Google Colab + GPU
+   │
+   ├── Data preparation
+   ├── Model training
+   ├── Evaluation
+   └── ONNX export
+   │
+   ▼
+GitHub Repository
+   │
+   ├── ONNX Models
+   ├── Inference Code
+   ├── Results
+   └── Documentation
+   │
+   ▼
+Raspberry Pi 5
+   │
+   ├── Audio Input
+   ├── ONNX Runtime
+   ├── Speech Enhancement
+   └── Audio Output
 ```
 
-These component-level checks provide additional evidence that the exported neural-network components are functioning consistently with the PyTorch implementation.
+> Model training and ONNX export require significantly more computational resources than normal repository development. GPU-enabled Google Colab is therefore used for the heavy computational stages.
 
 ---
 
-# 🎧 Speech Enhancement Demonstration
+# 🍓 Raspberry Pi 5 Deployment
 
-The demonstration pipeline is:
-
-```text
-                INPUT
-                  │
-                  ▼
-          Noisy Speech
-                  │
-                  ▼
-          DeepFilterNet3
-                  │
-                  ▼
-          Enhanced Speech
-                  │
-                  ▼
-              OUTPUT
-```
-
-Example scenarios include:
-
-```text
-🎤 Speech + 🔫 Firearm noise
-          ↓
-       DFNet3
-          ↓
-    Enhanced Speech
-
-
-🎤 Speech + 🚁 Drone noise
-          ↓
-       DFNet3
-          ↓
-    Enhanced Speech
-
-
-🎤 Speech + 🚗 Vehicle noise
-          ↓
-       DFNet3
-          ↓
-    Enhanced Speech
-
-
-🎤 Speech + 🚨 Siren
-          ↓
-       DFNet3
-          ↓
-    Enhanced Speech
-```
-
-The purpose of these demonstrations is to show the model's behavior under different noise conditions represented in the training corpus.
-
----
-
-# 🥧 Raspberry Pi 5 Deployment
-
-## Target Hardware
-
-The final edge deployment target is:
+The final target platform is:
 
 **Raspberry Pi 5**
 
-The Raspberry Pi 5 has not yet been used for the project's hardware benchmark.
-
-Therefore, Raspberry Pi performance metrics are **not claimed yet**.
-
-## Planned Edge Architecture
+The intended system is:
 
 ```text
-                    🎤
-                Microphone
-                    │
-                    ▼
-              Audio Capture
-                    │
-                    ▼
-                48 kHz PCM
-                    │
-                    ▼
-             Feature Extraction
-                    │
-                    ▼
-              ONNX Runtime
-                    │
-          ┌─────────┴─────────┐
-          │                   │
-          ▼                   ▼
-       enc.onnx           erb_dec.onnx
-          │                   │
-          └─────────┬─────────┘
-                    │
-                    ▼
-                 df_dec
-                    │
-                    ▼
-             DF Processing
-                    │
-                    ▼
-             Audio Synthesis
-                    │
-                    ▼
-                    🔊
-                 Speaker
+🎤 Microphone
+      │
+      ▼
+Audio Capture
+      │
+      ▼
+48 kHz PCM
+      │
+      ▼
+Feature Extraction
+      │
+      ▼
+┌───────────────────────┐
+│     ONNX Runtime      │
+│                       │
+│  enc.onnx             │
+│  erb_dec.onnx         │
+│  df_dec.onnx          │
+└───────────┬───────────┘
+            │
+            ▼
+    DeepFilter Processing
+            │
+            ▼
+      Audio Synthesis
+            │
+            ▼
+       🔊 Speaker
 ```
+
+The Raspberry Pi will eventually perform the speech enhancement locally, reducing the need for cloud processing.
 
 ---
 
-# 📏 Planned Raspberry Pi Benchmark
+# ⚡ Real-Time Deployment Plan
 
-Once the system is deployed on Raspberry Pi 5, the following measurements will be collected:
+After Raspberry Pi 5 hardware is available, the system will be tested for:
 
-| Metric | Purpose |
-|---|---|
-| End-to-end latency | Measure response delay |
-| Real-time factor | Determine real-time feasibility |
-| CPU utilization | Measure processor load |
-| RAM usage | Determine memory requirements |
-| Streaming stability | Test continuous operation |
-| Audio quality | Evaluate enhancement quality |
+- End-to-end latency
+- Processing time
+- Real-time factor
+- CPU utilization
+- RAM usage
+- Continuous streaming stability
+- Audio quality
 
-### Real-Time Criterion
-
-The real-time factor will be calculated as:
+### Real-Time Factor
 
 ```text
 RTF = Processing Time / Audio Duration
 ```
 
-A value below `1.0` indicates that the processing time is shorter than the corresponding audio duration.
-
-No Raspberry Pi real-time claim will be made until this is measured on actual hardware.
-
----
-
-# 🟢 Proof of Readiness
-
-The current project status is:
-
-| Stage | Status | Evidence |
-|---|:---:|---|
-| Dataset preparation | 🟢 Complete | Multilingual + diverse noise corpus |
-| DeepFilterNet3 fine-tuning | 🟢 Complete | Epoch-120 checkpoint |
-| Controlled evaluation | 🟢 Complete | 20.4086 dB output SNR |
-| Test-set evaluation | 🟢 Complete | SDR / STOI |
-| ONNX export | 🟢 Complete | 3 ONNX components |
-| ONNX component validation | 🟢 Complete | Numerical comparison |
-| End-to-end ONNX validation | 🟢 Complete | PyTorch equivalence |
-| Audio demonstration | 🟡 In progress | Demo package |
-| Raspberry Pi 5 deployment | 🟡 Planned | Edge architecture prepared |
-| Raspberry Pi real-time benchmark | 🟡 Pending | Requires hardware |
-| INT8 optimization | ⚪ Future | After FP32 benchmark |
-
----
-
-# 🗺️ Deployment Roadmap
-
 ```text
-        MODEL DEVELOPMENT
-               │
-               ▼
-      Fine-tuned DFNet3
-               │
-               ▼
-       Controlled Testing
-               │
-               ▼
-          ONNX Export
-               │
-               ▼
-     ONNX Runtime Validation
-               │
-               ▼
-        ┌──────────────┐
-        │ CURRENT      │
-        │ MILESTONE    │
-        └──────────────┘
-               │
-               ▼
-       Raspberry Pi 5
-               │
-               ▼
-       Audio Streaming
-               │
-               ▼
-      Real-Time Benchmark
-               │
-               ▼
-       FP32 Optimization
-               │
-               ▼
-        INT8 Quantization
-               │
-               ▼
-      Optimized Edge AI
+RTF < 1.0
+    ↓
+Processing is faster than the audio duration
 ```
 
----
-
-# 🛠️ Technology Stack
-
-### Machine Learning
-
-- Python
-- PyTorch
-- DeepFilterNet3
-
-### Signal Processing
-
-- STFT
-- ERB feature processing
-- Deep filtering
-- Audio synthesis
-
-### Edge Deployment
-
-- ONNX
-- ONNX Runtime
-- Linux
-- Raspberry Pi 5
+No Raspberry Pi real-time performance number is claimed until it is measured on actual Raspberry Pi 5 hardware.
 
 ---
 
-# 📂 Project Structure
+# 💰 Future Expansion With More Resources
+
+The current implementation is a working foundation.
+
+With additional **computational resources, time, budget and data**, the project can be expanded significantly.
+
+### Planned improvements
+
+```text
+Current Hindi Model
+       │
+       ▼
+More Training Data
+       │
+       ▼
+Multilingual Training
+       │
+       ▼
+More Noise Conditions
+       │
+       ▼
+More Model Experiments
+       │
+       ▼
+Hyperparameter Optimization
+       │
+       ▼
+Model Optimization
+       │
+       ▼
+Quantization
+       │
+       ▼
+Raspberry Pi Optimization
+       │
+       ▼
+Real-Time Edge System
+```
+
+Possible improvements include:
+
+- More languages
+- More accents
+- More speakers
+- Larger speech datasets
+- More real-world noise
+- More SNR conditions
+- Longer training
+- Hyperparameter optimization
+- Architecture experiments
+- FP32 optimization
+- INT8 quantization
+- Streaming optimization
+- Raspberry Pi performance optimization
+
+---
+
+# 📁 Repository Structure
 
 ```text
 SIH-DFNet3-Edge-Speech-Enhancement/
 │
-├── README.md
-│
-├── docs/
-│   ├── architecture.png
-│   ├── deployment.png
+├── Demo/
+│   ├── README.md
+│   ├── clean.wav
+│   ├── noisy_0dB.wav
+│   ├── enhanced_finetuned.wav
+│   ├── enhanced_onnx_hybrid.wav
 │   └── results.png
 │
-├── demo/
-│   ├── README.md
-│   └── screenshots/
+├── Models/
+│   └── dfnet3_hindi_onnx/
+│       ├── config.ini
+│       ├── enc.onnx
+│       ├── erb_dec.onnx
+│       ├── df_dec.onnx
+│       └── version.txt
+│
+├── Result/
+│   └── evaluation.md
 │
 ├── inference/
-│   └── README.md
+│   ├── README.md
+│   ├── enhance_onnx.py
+│   └── requirements.txt
 │
 ├── deployment/
 │   └── RASPBERRY_PI_5.md
 │
-└── results/
-    └── README.md
+├── .gitignore
+└── README.md
 ```
 
 ---
 
-# 📦 Deployment Package
+# 🔧 Inference
 
-The ONNX deployment package contains:
+The repository contains an ONNX-backed inference implementation.
 
 ```text
+inference/
+├── enhance_onnx.py
+├── requirements.txt
+└── README.md
+```
+
+The inference pipeline uses:
+
+```text
+Input WAV
+    ↓
+DeepFilterNet Feature Extraction
+    ↓
+ONNX Runtime
+    ↓
 enc.onnx
 erb_dec.onnx
 df_dec.onnx
-config.ini
-version.txt
+    ↓
+DeepFilter Processing
+    ↓
+Audio Synthesis
+    ↓
+Enhanced WAV
 ```
 
-The package is intended to provide the neural-network components required for the edge inference pipeline.
-
----
-
-# 🔗 Resources
-
-### Official DeepFilterNet Repository
-
-[Rikorose/DeepFilterNet](https://github.com/Rikorose/DeepFilterNet)
-
-### Raspberry Pi 5
-
-[Raspberry Pi 5 — Official](https://www.raspberrypi.com/products/raspberry-pi-5/)
-
-### Project Resources
-
-- 📊 Model evaluation results — available in this repository
-- 🎧 Audio demonstration — being prepared
-- 🎥 Technical demonstration video — being prepared
-- 📦 ONNX deployment package — being prepared
-- 🥧 Raspberry Pi 5 deployment guide — being prepared
-
----
-
-# ⚠️ Current Limitations
-
-The following limitations are explicitly acknowledged:
-
-1. Raspberry Pi 5 hardware has not yet been benchmarked.
-2. Raspberry Pi latency has not yet been measured.
-3. Raspberry Pi CPU and RAM usage have not yet been measured.
-4. Real-time operation on Raspberry Pi 5 has not yet been experimentally verified.
-5. INT8 quantization has not yet been performed.
-6. The 20.4086 dB SNR result represents one controlled evaluation sample and is not an overall test-set average.
-
----
-
-# 🎯 Next Development Stage
+Detailed instructions are available in:
 
 ```text
-ONNX VALIDATION
+inference/README.md
+```
+
+---
+
+# 📚 DeepFilterNet Source
+
+This project is based on the DeepFilterNet implementation.
+
+Pinned source commit used during development:
+
+```text
+d375b2d8309e0935d165700c91da9de862a99c31
+```
+
+The repository's inference implementation retains the required DeepFilterNet processing stages around the exported ONNX components.
+
+---
+
+# 🧪 Current Project Status
+
+```text
+Dataset Preparation              ✅
+Hindi Speech Preparation         ✅
+Noise Dataset Preparation        ✅
+DeepFilterNet3 Fine-Tuning       ✅
+Controlled Evaluation            ✅
+Test-Set Evaluation              ✅
+ONNX Export                      ✅
+ONNX Component Validation        ✅
+End-to-End ONNX Validation       ✅
+GitHub Model Artifacts           ✅
+GitHub Inference Code            ✅
+Deployment Documentation         ✅
+Multilingual Expansion           🟡 Planned
+Raspberry Pi 5 Deployment        🟡 Planned
+Real-Time Benchmark              🟡 Pending
+INT8 Quantization                ⚪ Future
+```
+
+---
+
+# 🏆 Proof of Readiness
+
+The project currently provides evidence at multiple levels:
+
+```text
+LEVEL 1
+Dataset Preparation
        │
        ▼
+LEVEL 2
+DeepFilterNet3 Fine-Tuning
+       │
+       ▼
+LEVEL 3
+Audio + Quantitative Evaluation
+       │
+       ▼
+LEVEL 4
+ONNX Export
+       │
+       ▼
+LEVEL 5
+ONNX Component Validation
+       │
+       ▼
+LEVEL 6
+End-to-End ONNX Validation
+       │
+       ▼
+LEVEL 7
+GitHub Inference Package
+       │
+       ▼
+LEVEL 8
 Raspberry Pi 5 Deployment
        │
        ▼
-Microphone Input
-       │
-       ▼
-Real-Time ONNX Inference
-       │
-       ▼
-Audio Output
-       │
-       ▼
-Latency / CPU / RAM Measurement
-       │
-       ▼
-FP32 Optimization
-       │
-       ▼
-INT8 Optimization
+LEVEL 9
+Real-Time Hardware Benchmark
+```
+
+The first seven stages have been completed.
+
+The remaining stages require Raspberry Pi 5 hardware testing.
+
+---
+
+# 🛣️ Roadmap
+
+```text
+                         STATUS
+                           │
+                           ▼
+              ┌─────────────────────┐
+              │ Dataset Preparation │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ Hindi Model Training│
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ Model Evaluation    │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ ONNX Export         │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ ONNX Validation     │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ GitHub Inference    │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ Multilingual Model  │
+              │ Expansion           │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ Raspberry Pi 5      │
+              │ Deployment          │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ Real-Time Benchmark │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ Optimization +      │
+              │ Quantization        │
+              └─────────────────────┘
 ```
 
 ---
 
-# 🏆 Smart India Hackathon
+# ⚠️ Limitations
 
-Developed as part of **Smart India Hackathon (SIH)**.
+The following limitations are intentionally stated clearly:
 
-### Project Vision
-
-> **From a trained speech-enhancement model to a validated ONNX pipeline and ultimately to a deployable edge-AI speech enhancement system.**
+1. The currently validated trained model is Hindi-focused.
+2. Multilingual training is a planned expansion, not yet claimed as completed.
+3. Raspberry Pi 5 hardware has not yet been benchmarked.
+4. Raspberry Pi latency has not yet been measured.
+5. Raspberry Pi CPU and RAM usage have not yet been measured.
+6. Real-time microphone-to-speaker operation has not yet been experimentally verified on Raspberry Pi 5.
+7. INT8 quantization has not yet been performed.
+8. The 20.4086 dB SNR result is from one controlled evaluation sample.
+9. Controlled-sample SNR and test-set SDR/STOI are different measurements.
+10. The current ONNX implementation is an ONNX-backed hybrid pipeline rather than a single completely monolithic ONNX graph.
 
 ---
 
-## 👥 Team
+# 🎯 Final Vision
 
-**SIH Team Project**
+The long-term goal is to develop a **multilingual, low-latency, edge-based speech enhancement system** that can operate locally on resource-constrained hardware.
 
-For project details, implementation evidence, demonstrations, and deployment documentation, explore the repository contents.
+```text
+        MULTILINGUAL SPEECH
+                 │
+                 ▼
+        Diverse Noise Conditions
+                 │
+                 ▼
+          DeepFilterNet3
+                 │
+                 ▼
+               ONNX
+                 │
+                 ▼
+          Raspberry Pi 5
+                 │
+                 ▼
+       Real-Time Enhancement
+                 │
+                 ▼
+          Clearer Speech
+```
+
+The current Hindi model and ONNX pipeline form the foundation for this larger system.
+
+---
+
+## 👨‍💻 Project
+
+**SIH-DFNet3 — Edge Speech Enhancement**
+
+Built as part of **Smart India Hackathon (SIH)**.
+
+### Core Technologies
+
+```text
+Python
+PyTorch
+DeepFilterNet3
+ONNX
+ONNX Runtime
+NumPy
+SciPy
+libDF
+Google Colab
+Raspberry Pi 5
+```
+
+---
+
+## 📌 Final Status
+
+> **A Hindi-focused DeepFilterNet3 speech enhancement model has been fine-tuned, evaluated, exported to ONNX, and validated against the PyTorch implementation. The prepared multilingual speech and noise datasets provide a foundation for future multilingual training. The next major stages are expanded training, Raspberry Pi 5 deployment, real-time benchmarking, and edge optimization.**
